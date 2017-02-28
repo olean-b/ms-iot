@@ -4,15 +4,15 @@
     using System.Net;
     using System.Text;
 
-    using KNXLibPortableLib.DPT;
+    using DPT;
 
    
 
-    using KNXLibPortableLib.Exceptions;
+    using Exceptions;
 
     public abstract class KnxBase
     {
-        private readonly KnxLockManager _lockManager = new KnxLockManager();
+        private readonly KnxLockManager m_lockManager = new KnxLockManager();
 
         public event Action OnConnected;
         public event Action OnDisconnected;
@@ -88,30 +88,26 @@
 
         protected virtual void Connected()
         {
-            if (this.OnConnected != null)
-                this.OnConnected();
+            this.OnConnected?.Invoke();
 
-            this._lockManager.UnlockConnection();
+            this.m_lockManager.UnlockConnection();
         }
 
         protected virtual void Disconnected()
         {
-            this._lockManager.LockConnection();
+            this.m_lockManager.LockConnection();
 
-            if (this.OnDisconnected != null)
-                this.OnDisconnected();
+            this.OnDisconnected?.Invoke();
         }
 
         protected virtual void EventReceived(string address, string data)
         {
-            if (this.OnEvent != null)
-                this.OnEvent(address, data);
+            this.OnEvent?.Invoke(address, data);
         }
 
         protected virtual void StatusReceived(string address, string data)
         {
-            if (this.OnStatus != null)
-                this.OnStatus(address, data);
+            this.OnStatus?.Invoke(address, data);
         }
 
         #region Actions
@@ -184,13 +180,13 @@
 
         public void Action(string address, byte[] data)
         {
-            this._lockManager.PerformLockedOperation(() => this.SendAction(address, data));
+            this.m_lockManager.PerformLockedOperation(() => this.SendAction(address, data));
         }
         #endregion
 
         public void RequestStatus(string address)
         {
-            this._lockManager.PerformLockedOperation(() => this.SendRequestStatus(address));
+            this.m_lockManager.PerformLockedOperation(() => this.SendRequestStatus(address));
         }
     }
 }

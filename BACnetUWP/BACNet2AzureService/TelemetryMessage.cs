@@ -10,20 +10,17 @@ namespace BACNet2AzureService
     [DataContract]
     internal class TelemetryMessage
     {
-        [DataMember]
-        internal string DeviceId;  // KNX Gateway
+        [DataMember] internal string GatewaySource;
 
-        [DataMember]
-        internal string MessageSource;  // KNX Source address (GA)
+        [DataMember] internal string DeviceSource;  
 
-        [DataMember]
-        internal string DataType;  // KNX Source address (GA)
+        [DataMember] internal string MessageSource;  
 
-        [DataMember]
-        internal string TextualValue;
+        [DataMember] internal string MessageType;  
 
-        [DataMember]
-        internal DateTime LocalTimeStamp;
+        [DataMember] internal string Value;
+
+        [DataMember] internal DateTime GatewayTimeStampUtc; 
     }
-
+        
 }

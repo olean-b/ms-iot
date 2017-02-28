@@ -139,7 +139,9 @@
                 }
 
                 if (datagram.MessageCode != 0x29)
-                    return ResponseType.Other;
+                {
+                    return ResponseType.Other;                    
+                }
 
                 var type = datagram.Apdu[1] >> 4;
 
@@ -151,8 +153,9 @@
                         return ResponseType.Status;
                 }
             }
-            catch (Exception ex)
+            catch (IndexOutOfRangeException ex)
             {
+                System.Diagnostics.Debug.WriteLine("Catch exception in datagram.Apdu.Length");
                 System.Diagnostics.Debug.WriteLine(ex.Message);
             }
 

@@ -193,11 +193,11 @@ namespace BACNet2AzureService
         {
             var l_telemetry = new TelemetryMessage()
             {
-                DeviceId = "RO-WinBerry02",
+                GatewaySource = "WinBerry3",
                 MessageSource = monitoredObjectIdentifier.instance.ToString(),
-                TextualValue = value.value[0].Value.ToString(),
-                DataType = monitoredObjectIdentifier.Type.ToString(),
-                LocalTimeStamp = DateTime.Now
+                MessageType = monitoredObjectIdentifier.Type.ToString(),
+                Value = value.value[0].Value.ToString(),
+                GatewayTimeStampUtc = DateTime.Now.ToUniversalTime()
             };
 
             var l_outBoundMessage = new Message(Serialize(l_telemetry));

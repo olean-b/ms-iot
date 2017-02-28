@@ -6,16 +6,16 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using KNXLibPortableLib.Utils;
+    using Utils;
 
     using Sockets.Plugin;
     using Sockets.Plugin.Abstractions;
 
     public class KnxTunneling : KnxBase
     {
-        private int _timerPeriod = 60000;
-        private byte _rxSequenceNumber;
-        private byte _sequenceNumber;
+        private int m_timerPeriod = 60000;
+        private byte m_rxSequenceNumber;
+        private byte m_sequenceNumber;
 
         public byte ChannelId { get; private set; }
         public object SequenceNumberLock { get; private set; }
@@ -28,7 +28,7 @@
             this.RemoteEndPoint = new IPEndPoint(IPAddress.Parse(remoteIpAddress), remotePort);
             this.ChannelId = 0x00;
             this.SequenceNumberLock = new object();
-            this.StateRequestTimer = new Timer(OnStateRequest, null, Timeout.Infinite, this._timerPeriod);
+            this.StateRequestTimer = new Timer(OnStateRequest, null, Timeout.Infinite, this.m_timerPeriod);
         }
 
         public async void Connect()
@@ -184,12 +184,12 @@
 
         private void InitializeStateRequest()
         {
-            this.StateRequestTimer.Change(0, this._timerPeriod);
+            this.StateRequestTimer.Change(0, this.m_timerPeriod);
         }
 
         private void TerminateStateRequest()
         {
-            this.StateRequestTimer.Change(Timeout.Infinite, this._timerPeriod);
+            this.StateRequestTimer.Change(Timeout.Infinite, this.m_timerPeriod);
         }
 
         ~KnxTunneling()
@@ -217,10 +217,10 @@
             var process = true;
             lock (this.SequenceNumberLock)
             {
-                if (sequenceNumber <= this._rxSequenceNumber)
+                if (sequenceNumber <= this.m_rxSequenceNumber)
                     process = false;
 
-                this._rxSequenceNumber = sequenceNumber;
+                this.m_rxSequenceNumber = sequenceNumber;
             }
 
             if (process)
@@ -314,17 +314,17 @@
 
         public byte GenerateSequenceNumber()
         {
-            return this._sequenceNumber++;
+            return this.m_sequenceNumber++;
         }
 
         public void RevertSingleSequenceNumber()
         {
-            this._sequenceNumber--;
+            this.m_sequenceNumber--;
         }
 
         public void ResetSequenceNumber()
         {
-            this._sequenceNumber = 0x00;
+            this.m_sequenceNumber = 0x00;
         }
 
         protected async override void SendAction(string destinationAddress, byte[] data)

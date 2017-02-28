@@ -97,7 +97,7 @@ namespace BACNet_UWP_Client
                     }
                     catch (Exception ex)
                     {
-                        //Trace.TraceError("Exception during renew subscription: " + ex.Message);
+                        Debug.WriteLine("Exception during renew subscription: " + ex.Message);
                     }
                     this.UiLogItem($"Renew subscription on {l_item.Key}");
                 }
